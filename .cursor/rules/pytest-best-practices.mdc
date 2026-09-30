@@ -1,0 +1,54 @@
+---
+description: pytest and Python conventions for tests, fixtures, and markers
+globs: **/*.py, pytest.ini
+alwaysApply: false
+---
+
+# pytest & Python Conventions
+
+## Python Style
+
+- Modern syntax: `list[str]`, `X | None`, f-strings. Type-hint function signatures.
+- Naming: `snake_case` functions/vars, `PascalCase` classes, `UPPER_SNAKE` constants.
+- Keep functions short; use `@dataclass` for structured test data rather than loose dicts.
+
+## Tests
+
+- Name tests by behavior: `test_<action>_<expected_result>` (e.g. `test_login_with_locked_user_shows_error`).
+- Use plain functions, not `unittest.TestCase`.
+- One behavior per test, laid out as Arrange / Act / Assert. Tests must not depend on each other.
+- Keep logic (`if`, loops, `try`) out of tests; move setup into fixtures and actions into Page Objects.
+
+## Fixtures
+
+- Put shared fixtures in `conftest.py`; never import them directly.
+- Use `yield` for teardown. Keep the default `function` scope unless there's a clear reason not to.
+
+## Parametrization & Markers
+
+- Use `@pytest.mark.parametrize` with `ids=` so reports stay readable.
+- Markers: `smoke`, `regression`. Register them in `pytest.ini`. `skip` always needs `reason=`.
+
+```ini
+[pytest]
+testpaths = tests
+addopts = --strict-markers -ra --base-url https://www.saucedemo.com
+markers =
+    smoke: critical path
+    regression: full suite
+```
+
+```python
+@pytest.mark.parametrize(
+    ("username", "error"),
+    [
+        ("locked_out_user", "locked out"),
+        ("", "Username is required"),
+    ],
+    ids=["locked_user", "empty_username"],
+)
+def test_login_with_invalid_user_shows_error(page: Page, username: str, error: str) -> None:
+    login_page = LoginPage(page).open()
+    login_page.login(username, "secret_sauce")
+    expect(login_page.error).to_contain_text(error)
+```

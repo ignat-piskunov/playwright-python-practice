@@ -1,0 +1,22 @@
+# Virtual environment (uv)
+.venv/
+
+# Environment / secrets
+.env
+.env.*
+!.env.example
+
+# Python
+__pycache__/
+
+# Pytest
+.pytest_cache/
+
+# pytest-playwright artifacts (traces, screenshots, videos)
+test-results/
+
+# Ruff
+.ruff_cache/
+
+# macOS
+.DS_Store

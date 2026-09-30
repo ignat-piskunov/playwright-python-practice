@@ -1,0 +1,39 @@
+---
+description: Project goal, stack, layout, and tooling
+alwaysApply: true
+---
+
+# Project Overview
+
+Portfolio project showing UI test automation with **Python 3.14+, pytest, pytest-playwright (sync API), and Page Object Model**. It's not a commercial project, so favor clean, readable code over enterprise-grade infrastructure.
+
+## Layout
+
+```
+pages/          # Page Objects, one class per page (+ components/ for header, modals)
+tests/          # test_<feature>.py files
+conftest.py     # shared fixtures
+pytest.ini      # pytest config, markers, base_url
+pyproject.toml  # project metadata and dependencies (managed by uv)
+uv.lock         # locked dependency versions, committed
+.python-version # Python version uv uses for this project
+README.md       # what is tested, how to run, sample report
+```
+
+## Tooling
+
+Dependencies and the virtualenv are managed with [uv](https://docs.astral.sh/uv/). Don't use `pip`, `venv`, or `requirements.txt`.
+
+- Setup: `uv sync` (creates `.venv`, installs the pinned Python and locked dependencies)
+- Browsers: `uv run playwright install chromium`
+- Run: `uv run pytest` (or `uv run pytest tests/test_login.py -x` for a single file)
+- Add dependencies with `uv add <pkg>`; dev-only tools with `uv add --dev <pkg>`. Never edit `uv.lock` by hand; commit it together with `pyproject.toml`.
+- Optional lint/format: `uvx ruff check --fix . && uvx ruff format .`
+- Never commit real credentials. Public demo-site credentials are fine in code or test data.
+
+## Working Agreement
+
+- Keep changes small and runnable; run the affected tests after edits.
+- Prefer the simplest idiomatic solution. Don't add abstractions (base classes, factories, config frameworks) until there's a real need.
+- Never add `time.sleep`, retry loops, or `xfail` to hide a flaky test. Find the root cause.
+- Keep `README.md` up to date when adding features or changing how to run tests.

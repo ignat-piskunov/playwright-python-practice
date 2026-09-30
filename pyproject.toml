@@ -1,0 +1,22 @@
+[project]
+name = "playwright-python-practice"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "Ignat Piskunov", email = "ignat.piskunov@icloud.com" }
+]
+requires-python = ">=3.14"
+dependencies = [
+    "playwright>=1.63.0",
+    "pytest>=9.1.1",
+    "pytest-playwright>=0.9.0",
+    "requests>=2.34.2",
+]
+
+[project.scripts]
+playwright-python-practice = "playwright_python_practice:main"
+
+[build-system]
+requires = ["uv_build>=0.12.19,<0.13.0"]
+build-backend = "uv_build"
